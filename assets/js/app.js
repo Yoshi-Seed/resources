@@ -95,7 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderNode(node) {
         showingResult = false;
-        navigatorQuestionEl.innerHTML = `<h3>${node.question}</h3>`;
+        const subtitle = node.subtitle ? `<p class="navigator__subtitle">${node.subtitle}</p>` : '';
+        navigatorQuestionEl.innerHTML = `<h3>${node.question}</h3>${subtitle}`;
         navigatorOptionsEl.innerHTML = '';
         navigatorResultEl.classList.remove('is-visible');
         navigatorResultEl.innerHTML = '';
@@ -106,8 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
             optionEl.type = 'button';
             optionEl.className = 'navigator-option';
             optionEl.setAttribute('role', 'listitem');
+            
+            const iconHtml = option.icon ? `<i class="fa-solid ${option.icon} navigator-option__icon"></i>` : '';
             optionEl.innerHTML = `
-                <span class="navigator-option__label">${option.label}</span>
+                <div class="navigator-option__header">
+                    ${iconHtml}
+                    <span class="navigator-option__label">${option.label}</span>
+                </div>
                 ${option.description ? `<span class="navigator-option__description">${option.description}</span>` : ''}
             `;
             optionEl.addEventListener('click', () => handleOption(option));
@@ -125,17 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (option.resources) {
             trail.push(option.label);
-            renderResources(option.resources, option.label);
+            renderResources(option.resources, option.label, option.resultMessage);
         }
     }
 
-    function renderResources(resourceIds, label) {
+    function renderResources(resourceIds, label, resultMessage) {
         showingResult = true;
         renderBreadcrumbs();
 
+        const message = resultMessage || `下記のGoogle Driveパスをコピーしてアクセスしてください。`;
         navigatorQuestionEl.innerHTML = `
-            <h3>${label} のためにおすすめのリソース</h3>
-            <p>下記のDriveパスをコピーしてアクセスしてください。</p>
+            <h3><i class="fa-solid fa-bullseye"></i> ${label}</h3>
+            <p class="navigator__result-message">${message}</p>
         `;
         navigatorOptionsEl.innerHTML = '';
 
@@ -216,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const meta = document.createElement('div');
         meta.className = 'resource-item__meta';
-        meta.textContent = `${resource.type} ｜ ${resource.tags.join(' / ')}`;
+        meta.innerHTML = `<span class="resource-type">${resource.type}</span> <span class="resource-tags">${resource.tags.join(' • ')}</span>`;
 
         const description = document.createElement('p');
         description.className = 'resource-item__description';
@@ -227,11 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (resource.url) {
             const link = document.createElement('a');
-            link.className = 'resource-item__link';
+            link.className = 'resource-item__link btn btn--primary';
             link.href = resource.url;
             link.target = '_blank';
             link.rel = 'noopener';
-            link.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i> Driveで開く';
+            link.innerHTML = '<i class="fa-solid fa-external-link-alt"></i> <span>すぐにアクセス</span>';
             actions.appendChild(link);
         }
 
@@ -250,22 +257,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'copy-btn';
-        button.innerHTML = '<i class="fa-regular fa-copy"></i> パスをコピー';
+        button.innerHTML = '<i class="fa-regular fa-copy"></i> <span>パスをコピー</span>';
         button.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(text);
                 button.classList.add('is-success');
-                button.innerHTML = '<i class="fa-solid fa-check"></i> コピーしました';
+                button.innerHTML = '<i class="fa-solid fa-check"></i> <span>コピー完了！</span>';
+                
+                // 成功時のアニメーション効果を追加
+                button.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
+                
                 setTimeout(() => {
                     button.classList.remove('is-success');
-                    button.innerHTML = '<i class="fa-regular fa-copy"></i> パスをコピー';
-                }, 2000);
+                    button.innerHTML = '<i class="fa-regular fa-copy"></i> <span>パスをコピー</span>';
+                }, 2500);
             } catch (error) {
-                button.classList.remove('is-success');
-                button.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> コピーできません';
+                button.classList.add('is-error');
+                button.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> <span>コピー失敗</span>';
                 setTimeout(() => {
-                    button.innerHTML = '<i class="fa-regular fa-copy"></i> パスをコピー';
-                }, 2000);
+                    button.classList.remove('is-error');
+                    button.innerHTML = '<i class="fa-regular fa-copy"></i> <span>パスをコピー</span>';
+                }, 2500);
             }
         });
         return button;
