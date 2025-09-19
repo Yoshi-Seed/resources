@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成AIリソースハブ | シード・プランニング</title>
+    <meta name="description" content="社内の生成AI関連リソースを目的別にナビゲートするポータルサイトです。研修資料やプロンプト集、運用ガイドを素早く見つけられます。">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <header class="hero">
+            <div class="hero__content">
+                <p class="hero__eyebrow">Seed Planning | Generative AI Hub</p>
+                <h1 class="hero__title">生成AIリソースハブ</h1>
+                <p class="hero__lead">社内に散らばる生成AIの知見・教材・運用ドキュメントをここに集約。目的を選ぶだけで、今必要な情報に最短でたどり着けます。</p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary" href="#resource-navigator"><i class="fa-solid fa-compass"></i><span>リソースを探す</span></a>
+                    <a class="btn btn--ghost" href="#resource-directory"><i class="fa-solid fa-layer-group"></i><span>一覧を眺める</span></a>
+                </div>
+            </div>
+            <div class="hero__highlight">
+                <div class="hero-card">
+                    <p class="hero-card__label">迷子防止ガイド</p>
+                    <h2 class="hero-card__title">3クリックで適切な資料へ</h2>
+                    <p class="hero-card__text">ナビゲーションウィザードが、スキル診断から研修資料まで順番に案内します。</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="quick-access" aria-labelledby="quick-access-title">
+                <div class="section-heading">
+                    <p class="section-heading__eyebrow">Quick Access</p>
+                    <h2 id="quick-access-title">まずチェックしてほしい定番リソース</h2>
+                    <p class="section-heading__lead">時間がないときは、以下のショートカットからどうぞ。</p>
+                </div>
+                <div class="quick-access__grid" id="quick-links"></div>
+            </section>
+
+            <section class="navigator" id="resource-navigator" aria-labelledby="navigator-title">
+                <div class="section-heading">
+                    <p class="section-heading__eyebrow">Navigator</p>
+                    <h2 id="navigator-title">何をお探しですか？</h2>
+                    <p class="section-heading__lead">質問に答えると、該当するGoogle Drive上の資料パスを提示します。</p>
+                </div>
+                <div class="navigator__panel">
+                    <div class="navigator__breadcrumbs" id="navigator-breadcrumbs" aria-live="polite"></div>
+                    <div class="navigator__question" id="navigator-question"></div>
+                    <div class="navigator__options" id="navigator-options" role="list"></div>
+                    <div class="navigator__result" id="navigator-result"></div>
+                </div>
+            </section>
+
+            <section class="finder" id="resource-search" aria-labelledby="search-title">
+                <div class="section-heading">
+                    <p class="section-heading__eyebrow">Resource Finder</p>
+                    <h2 id="search-title">キーワードやタグで資料を横断検索</h2>
+                    <p class="section-heading__lead">目的がはっきりしている場合は、検索ボックスやタグチップから必要な資料を素早く探せます。</p>
+                </div>
+                <div class="finder__panel">
+                    <div class="finder__controls">
+                        <label class="finder__label" for="resource-search-input">
+                            <span class="finder__label-text"><i class="fa-solid fa-magnifying-glass"></i> キーワードから探す</span>
+                            <input id="resource-search-input" class="finder__input" type="search" placeholder="例：研修 / プロンプト / リーダー">
+                        </label>
+                        <button type="button" id="resource-search-clear" class="finder__clear" aria-label="検索条件をクリア">
+                            <i class="fa-solid fa-rotate-left"></i> クリア
+                        </button>
+                    </div>
+                    <div class="finder__tags" id="resource-search-tags" aria-label="タグで絞り込む"></div>
+                    <p class="finder__empty" id="resource-search-empty">検索キーワード、またはタグを選択するとおすすめ資料が表示されます。</p>
+                    <div class="finder__results" id="resource-search-results" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="directory" id="resource-directory" aria-labelledby="directory-title">
+                <div class="section-heading">
+                    <p class="section-heading__eyebrow">Resource Directory</p>
+                    <h2 id="directory-title">カテゴリ別リソース一覧</h2>
+                    <p class="section-heading__lead">あとから一覧で見直したい場合はこちら。カテゴリごとに内容と目的をまとめています。</p>
+                </div>
+                <div class="directory__grid" id="resource-categories"></div>
+            </section>
+
+            <section class="support" aria-labelledby="support-title">
+                <div class="section-heading">
+                    <p class="section-heading__eyebrow">Workflow Tips</p>
+                    <h2 id="support-title">活用を社内に浸透させるためのヒント</h2>
+                </div>
+                <div class="support__grid">
+                    <article class="support-card">
+                        <h3><i class="fa-solid fa-route"></i> ナビゲーションの使い方</h3>
+                        <p>Google Drive のフォルダ構造と連動させると効果的です。<strong>各リソースの Drive パス</strong>はデータ定義ファイル（<code>assets/js/resources.js</code>）で変更できます。</p>
+                    </article>
+                    <article class="support-card">
+                        <h3><i class="fa-solid fa-users-gear"></i> 共有のベストプラクティス</h3>
+                        <ul>
+                            <li>部署やロール別のおすすめリンクを「クイックアクセス」に設定。</li>
+                            <li>研修完了後に次のステップを案内するフォローアップメールと連携。</li>
+                            <li>Drive のアクセス権が必要な場合は、ナビゲーションの結果に窓口を併記。</li>
+                        </ul>
+                    </article>
+                    <article class="support-card">
+                        <h3><i class="fa-solid fa-pen-to-square"></i> コンテンツ更新の流れ</h3>
+                        <p>新しい資料が追加されたら、<strong>resources.js にタイトル・説明・Drive パスを追記</strong>し、必要に応じてナビゲーションの選択肢にリンクしてください。</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="page-footer">
+            <div class="page-footer__content">
+                <p class="page-footer__title">Seed Planning 生成AIラーニングコミッティ</p>
+                <p class="page-footer__note">このページは社内向けのナレッジハブです。リンク先の Google Drive 資料はアクセス権が必要です。</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="assets/js/resources.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
